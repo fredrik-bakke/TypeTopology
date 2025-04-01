@@ -110,19 +110,42 @@ totally-separated-types-are-sequentially-Hausdorff
 totally-separated-types-are-sequentially-Hausdorff nwlpo X X-is-ts f g a = II
  where
   I : (p : X → 𝟚) → p (f ∞) ＝ p (g ∞)
-  I p = I₃
+  I p = I₁
    where
     I₀ : (n : ℕ) → p (f (ι n)) ＝ p (g (ι n))
     I₀ n = ap p (a n)
 
-    I₁ : p (f ∞) ≠ p (g ∞) → WLPO
-    I₁ = disagreement-taboo (p ∘ f) (p ∘ g) I₀
+    I₁ : p (f ∞) ＝ p (g ∞)
+    I₁ = agreement-cotaboo nwlpo (p ∘ f) (p ∘ g) I₀
 
-    I₂ : ¬ (p (f ∞) ≠ p (g ∞))
-    I₂ = contrapositive I₁ nwlpo
+  II : f ∞ ＝ g ∞
+  II = X-is-ts I
 
-    I₃ : p (f ∞) ＝ p (g ∞)
-    I₃ = 𝟚-is-¬¬-separated (p (f ∞)) (p (g ∞)) I₂
+\end{code}
+
+If we strengthen WLPO to the type of increasing sequences `ℕ → Ω¬¬` then we
+obtain a correspondingly stronger result.
+
+\begin{code}
+
+open import TypeTopology.Separated
+open import UF.NotNotStablePropositions
+
+Ω¬¬-separated-types-are-sequentially-Hausdorff
+ : ¬ WLPO-Ω¬¬
+ → (X : 𝓤 ̇ )
+ → is-quasi-separated (Ω¬¬ 𝓥) X -- Quasi-separatedness is enough, since Ω¬¬ is a collection of propositions
+ → is-sequentially-Hausdorff X
+Ω¬¬-separated-types-are-sequentially-Hausdorff nwlpo X X-is-ts f g a = II
+ where
+  I : (p : X → Ω¬¬ 𝓥) → p (f ∞) ＝ p (g ∞)
+  I p = I₁
+   where
+    I₀ : (n : ℕ) → p (f (ι n)) ＝ p (g (ι n))
+    I₀ n = ap p (a n)
+
+    I₁ : p (f ∞) ＝ p (g ∞)
+    I₁ = ¬¬stableVariant.agreement-cotaboo nwlpo (p ∘ f) (p ∘ g) I₀
 
   II : f ∞ ＝ g ∞
   II = X-is-ts I

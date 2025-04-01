@@ -243,3 +243,76 @@ open import Notation.Order
   III = II (f ∞ ∞) refl
 
 \end{code}
+
+Added 29th March 2025 by Fredrik Bakke
+
+\begin{uncode}
+
+open import NotionsOfDecidability.Decidable
+open import UF.DiscreteAndSeparated
+
+module ¬¬stableVariant where
+
+ basic-discontinuity : (ℕ∞-Ω¬¬ → 𝟚) → 𝓤₀ ̇
+ basic-discontinuity p = ((n : ℕ) → p (ι n) ＝ ₀) × (p ∞ ＝ ₁)
+
+ basic-discontinuity-taboo : (p : ℕ∞-Ω¬¬ → 𝟚)
+                           → basic-discontinuity p
+                           → WLPO
+ basic-discontinuity-taboo p (f , r) u = 𝟚-equality-cases lemma₀ lemma₁
+  where
+   fact₀ : u ＝ ∞ → p u ＝ ₁
+   fact₀ t = p u ＝⟨ ap p t ⟩
+             p ∞ ＝⟨ r ⟩
+             ₁   ∎
+
+   fact₁ : p u ≠ ₁ → u ≠ ∞
+   fact₁ = contrapositive fact₀
+
+   fact₂ : p u ＝ ₀ → u ≠ ∞
+   fact₂ = fact₁ ∘ equal-₀-different-from-₁
+
+   lemma₀ : p u ＝ ₀ → (u ＝ ∞) + (u ≠ ∞)
+   lemma₀ s = inr (fact₂ s)
+
+   fact₃ : p u ＝ ₁ → ((n : ℕ) → u ≠ ι n)
+   fact₃ t n s = zero-is-not-one (₀       ＝⟨ (f n)⁻¹ ⟩
+                                  p (ι n) ＝⟨ (ap p s)⁻¹ ⟩
+                                  p u     ＝⟨ t ⟩
+                                  ₁       ∎)
+
+   lemma₁ : p u ＝ ₁ → (u ＝ ∞) + (u ≠ ∞)
+   lemma₁ t = inl (not-finite-is-∞ fe (fact₃ t))
+\end{uncode}
+
+\begin{uncode}
+ module _ {D : 𝓤 ̇ } (d : is-¬¬-separated D) where
+
+  disagreement-taboo : (p q : ℕ∞-Ω¬¬ → D)
+                      → ((n : ℕ) → p (ι n) ＝ q (ι n))
+                      → p ∞ ≠ q ∞
+                      → WLPO-Ω¬¬
+  disagreement-taboo p q f g = basic-discontinuity-taboo r (r-lemma , r-lemma∞)
+   where
+    A : ℕ∞-Ω¬¬ → 𝓤 ̇
+    A u = p u ＝ q u
+
+    δ : (u : ℕ∞-Ω¬¬) → is-decidable (p u ＝ q u)
+    δ u = ? -- d (p u) (q u)
+
+    r : ℕ∞-Ω¬¬ → D
+    r = ? -- characteristic-map A δ
+
+    r-lemma : (n : ℕ) → r (ι n) ＝ ₀
+    r-lemma n = -- characteristic-map-property₀-back A δ (ι n) (f n)
+
+    r-lemma∞ : r ∞ ＝ ₁
+    r-lemma∞ = characteristic-map-property₁-back A δ ∞ (λ a → g a)
+
+  agreement-cotaboo : ¬ WLPO
+                    → (p q : ℕ∞ → D)
+                    → ((n : ℕ) → p (ι n) ＝ q (ι n))
+                    → p ∞ ＝ q ∞
+  agreement-cotaboo φ p q f = d (p ∞) (q ∞) (contrapositive (disagreement-taboo p q f) φ)
+
+\end{uncode}

@@ -28,6 +28,7 @@ import TypeTopology.LimitPoints
 import TypeTopology.PropInfTychonoff
 import TypeTopology.PropTychonoff
 import TypeTopology.RicesTheoremForTheUniverse
+import TypeTopology.Separated -- by Fredrik Bakke
 import TypeTopology.SequentiallyHausdorff
 import TypeTopology.SigmaDiscreteAndTotallySeparated
 import TypeTopology.SimpleTypes

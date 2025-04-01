@@ -182,6 +182,9 @@ subtypes-of-sets-are-sets e i =
 is-embedding' : {X : 𝓤 ̇ } {Y : 𝓥 ̇ } → (X → Y) → 𝓤 ⊔ 𝓥 ̇
 is-embedding' f = ∀ x x' → is-equiv (ap f {x} {x'})
 
+_↪'_ : 𝓤 ̇ → 𝓥 ̇ → 𝓤 ⊔ 𝓥 ̇
+X ↪' Y = Σ f ꞉ (X → Y), is-embedding' f
+
 embedding-gives-embedding' : {X : 𝓤 ̇ } {Y : 𝓥 ̇ } (f : X → Y)
                            → is-embedding f
                            → is-embedding' f

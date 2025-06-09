@@ -34,7 +34,8 @@ open import UF.Subsingletons-FunExt
 
 \end{code}
 
-An equality defined by a Leibniz principle with 𝒮-valued families:
+Given a type 𝒮 we can define a notion of _equality_ on an arbitrary type X by a
+Leibniz principle with 𝒮-valued families:
 
 \begin{code}
 
@@ -55,9 +56,6 @@ that we are not referring to homotopical models in this discussion.
 
 \begin{code}
 
-is-quasi-separated : (𝒮 : 𝓥 ̇ ) → 𝓤 ̇ → 𝓤 ⊔ 𝓥 ̇
-is-quasi-separated 𝒮 X = {x y : X} → x ＝₍ 𝒮 ₎ y → x ＝ y
-
 refl-sep : (𝒮 : 𝓥 ̇ ) {X : 𝓤 ̇ } (x : X) → x ＝₍ 𝒮 ₎ x
 refl-sep 𝒮 x p = refl
 
@@ -67,9 +65,12 @@ idtosep 𝒮 x .x refl = refl-sep 𝒮 x
 is-separated : (𝒮 : 𝓥 ̇ ) → 𝓤 ̇ → 𝓤 ⊔ 𝓥 ̇
 is-separated 𝒮 X = {x y : X} → is-equiv (idtosep 𝒮 x y)
 
+is-quasi-separated : (𝒮 : 𝓥 ̇ ) → 𝓤 ̇ → 𝓤 ⊔ 𝓥 ̇
+is-quasi-separated 𝒮 X = {x y : X} → x ＝₍ 𝒮 ₎ y → x ＝ y
+
 \end{code}
 
-Every type is quasi-separated by itself, but there doesn't seem to be a way to
+Every type is self-quasi-separated, but there doesn't seem to be a way to
 conclude that this quasi-separation is unique in general.
 
 \begin{code}
@@ -98,8 +99,8 @@ sep-component-canonical-point 𝒮 x = (x , refl-sep 𝒮 x)
 
 \end{code}
 
-> The alternative characterization of total separatedness is that the
-> sep-component of any point is a subsingleton, and hence a singleton:
+An alternative characterization of separatedness is that the sep-component of
+any point is a subsingleton, and hence a singleton:
 
 \begin{code}
 
@@ -129,7 +130,7 @@ separated₁-gives-separated {𝓤} 𝒮 {X} τ {x} {y} =
 > tightness of a certain apartness relation, is given below.
 
 The corresponding formulation of separatedness, given a subuniverse 𝒮, may be to
-say that the identity types are elements of 𝒮.
+say that the identity types are elements of 𝒮, if 𝒮 is a subuniverse.
 
 \begin{uncode}
 
@@ -160,7 +161,7 @@ discrete-types-are-totally-separated {𝓤} {X} d {x} {y} α = g
 > The converse fails: by the results below, e.g. (ℕ → 𝟚) is totally
 > separated, but its discreteness amounts to WLPO.
 
-What is a corresponding general counterexample?
+What is a corresponding counterexample for general separatedness?
 
 𝒮-quasi-separated types are closed under retracts, and more generally under
 left cancellable maps:
@@ -193,6 +194,8 @@ equiv-to-quasi-separated 𝕗 = retract-of-quasi-separated (≃-gives-▷ 𝕗)
 
 𝒮-separated types are closed under embeddings.
 
+-- ! This proof is erroneous. It might not follow that x ＝₍𝒮₎ y → f x ＝₍𝒮₎ f y is an equivalence.
+
 Proof. Given two elements y and y of Y and an embedding f : Y ↪ X into an
 𝒮-separated type X, have a commuting diagram of shape
 
@@ -207,9 +210,9 @@ and we wish to prove that the top horizontal map is an equivalence. The left
 vertical map is an equivalence since f is an embedding, and the bottom
 horizontal map is an equivalence since X is 𝒮-separated. Finally, the right
 vertical map is an equivalence by the postcomposition property of embeddings
-and so the top horizontal map must also necessarily be an equivalence.
+and so the top horizontal map must also necessarily be an equivalence. ∎
 
--- ! Warning, this proof is erroneous. It might not follow that x ＝₍𝒮₎ y → f x ＝₍𝒮₎ f y is an equivalence.
+-- ! This proof is erroneous. It might not follow that x ＝₍𝒮₎ y → f x ＝₍𝒮₎ f y is an equivalence.
 
 \begin{code}
 
@@ -229,10 +232,11 @@ embedding-into-separated fe {𝒮} (f , H) τ {x} {y} =
   {!   !}
 
 
-equiv-to-separated : FunExt → {𝒮 : 𝓥 ̇ } {X : 𝓤 ̇ } {Y : 𝓤' ̇ }
-                           → Y ≃ X
-                           → is-separated 𝒮 X
-                           → is-separated 𝒮 Y
+equiv-to-separated : FunExt
+                   → {𝒮 : 𝓥 ̇ } {X : 𝓤 ̇ } {Y : 𝓤' ̇ }
+                   → Y ≃ X
+                   → is-separated 𝒮 X
+                   → is-separated 𝒮 Y
 equiv-to-separated fe 𝕗 = embedding-into-separated fe (≃-gives-↪ 𝕗)
 
 \end{code}
@@ -246,9 +250,9 @@ TODO: double negation stable propositions classify double negation separated typ
 \begin{code}
 
 quasi-separated-types-are-¬¬-separated : {𝒮 : 𝓥 ̇ } {X : 𝓤 ̇ }
-                                 → is-¬¬-separated 𝒮
-                                 → is-quasi-separated 𝒮 X
-                                 → is-¬¬-separated X
+                                       → is-¬¬-separated 𝒮
+                                       → is-quasi-separated 𝒮 X
+                                       → is-¬¬-separated X
 quasi-separated-types-are-¬¬-separated {𝓤} {𝓥} {𝒮} {X} s τ = g
  where
   g : (x y : X) → ¬¬ (x ＝ y) → x ＝ y
